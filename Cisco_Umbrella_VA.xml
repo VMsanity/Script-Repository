@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<feed  version="1.0" hasPendingRequests="false" >
+  <company></company>
+  <status>200</status>
+  <errmsg>OK</errmsg>
+  <interval>0</interval>
+  <kmsKeyId></kmsKeyId>
+  <pkdsRegion></pkdsRegion>
+    <entry type="predatasource">
+        <version>1701717080</version>
+        <name>Cisco_Umbrella_VA</name>
+        <displayedas>Cisco Umbrella</displayedas>
+        <description>Uses SNMP to poll Cisco Umbrella Specific SNMP OIDS. OIDS obtained from
+https://docs.umbrella.com/deployment-umbrella/docs/appendix-c-enable-snmp-monitoring</description>
+        <collector>script</collector>
+        <hasMultiInstances>false</hasMultiInstances>
+        <useWildValueAsUniqueIdentifier>false</useWildValueAsUniqueIdentifier>
+        <schedule>300</schedule>
+        <appliesTo>hasCategory(&#34;CiscoUmbrella&#34;)</appliesTo>
+        <wildcardauto>false</wildcardauto>
+        <wildcardpersist>false</wildcardpersist>
+        <wildcardlinuxscript></wildcardlinuxscript>
+        <wildcardlinuxcmdline></wildcardlinuxcmdline>
+        <wildcardwinscript></wildcardwinscript>
+        <wildcardwincmdline></wildcardwincmdline>
+        <wildcardgroovyscript></wildcardgroovyscript>
+        <wildcardschedule>1440</wildcardschedule>
+        <wildcarddisable>false</wildcarddisable>
+        <wildcarddeleteinactive>false</wildcarddeleteinactive>
+        <agdmethod>none</agdmethod>
+        <agdparams></agdparams>
+        <group></group>
+        <tags></tags>
+        <technology>See the following link for how to enable SNMP on Cisco Umbrella VA https://docs.umbrella.com/deployment-umbrella/docs/appendix-c-enable-snmp-monitoring</technology>
+        <adlist><![CDATA[{"agdmethod":"none","agdparams":"","locatorId":"","id":0,"filters":[],"params":{},"version":""}]]></adlist>
+        <schemaVersion>2</schemaVersion>
+    <integrationMetadata>
+        <integrationVersion>1.0.0</integrationVersion>
+        <integrationAuthorCompanyUuid>15feb5e4-a935-41c3-a66c-97cfb4568df2</integrationAuthorCompanyUuid>
+        <integrationLineageId>BopkVR-CT9y21iyKyg6YfA</integrationLineageId>
+        <integrationChecksum>c2030cb4616b8dc72140c000c69c603e</integrationChecksum>
+        <integrationAuthorNamespace>topgolf</integrationAuthorNamespace>
+        <integrationId>c0ce4279-8f12-439f-8fc3-aaa1199d6a58</integrationId>
+        <integrationLocator>3NXP9H</integrationLocator>
+        <integrationName></integrationName>
+        <integrationStatus>Security Review</integrationStatus>
+        <integrationPublishedAtMS>1701717307980</integrationPublishedAtMS>
+        <integrationIsPrivate>true</integrationIsPrivate>
+    </integrationMetadata>
+        <dataSourceType>1</dataSourceType>
+        <attributes>
+        <attribute>
+            <name>scripttype</name>
+            <value>embed</value>
+            <comment></comment>
+        </attribute>
+        <attribute>
+            <name>scriptgroovy</name>
+            <value>import com.santaba.agent.groovyapi.snmp.Snmp;
+// get the snmp host from the device properties
+def host = hostProps.get(&#39;system.hostname&#39;);
+
+// define a list of Umbrella oids
+def cisco_umbrella_mib =
+    [
+    umbrellaVAStatus                : &#39;.1.3.6.1.4.1.8072.1.3.2.4.1.2.7.116.104.105.115.100.110.115.1&#39;,
+    umbrellaConnectivity            : &#39;.1.3.6.1.4.1.8072.1.3.2.4.1.2.3.100.110.115.1&#39;,
+    umbrellaLocalDNSConnectivity    : &#39;.1.3.6.1.4.1.8072.1.3.2.4.1.2.8.108.111.99.97.108.100.110.115.1&#39;,
+    umbrellaDashboardConnectivity   : &#39;.1.3.6.1.4.1.8072.1.3.2.4.1.2.5.99.108.111.117.100.1&#39;,
+    umbrellaADconnectivity          : &#39;.1.3.6.1.4.1.8072.1.3.2.4.1.2.2.97.100.1&#39;,
+    umbrellaQueriesPS5min           : &#39;.1.3.6.1.4.1.8072.1.3.2.4.1.2.4.113.112.115.53.1&#39;,
+    umbrellaQueriesPS15min          : &#39;.1.3.6.1.4.1.8072.1.3.2.4.1.2.5.113.112.115.49.53.1&#39;
+    ];
+
+// iterate over each oid entry
+cisco_umbrella_mib.each
+{ key, oid -&#62;
+    // retrieve the oid and print the value
+    try
+    {
+        value = Snmp.get(host, oid);
+    }
+    catch (all) { value = &#34;&#34;}
+
+    if (key == &#34;umbrellaVAStatus&#34; &#38;&#38; (value)) {
+        if (value.contains(&#39;(green)&#39;)) {println key + &#34;=0&#34;}
+        if (value.contains(&#39;(yellow)&#39;)) {println key + &#34;=1&#34;}
+        if (value.contains(&#39;(red)&#39;)) {println key + &#34;=2&#34;}
+        }
+    if (key == &#34;umbrellaConnectivity&#34; &#38;&#38; (value)) {
+        if (value.contains(&#39;(green)&#39;)) {println key + &#34;=0&#34;}
+        if (value.contains(&#39;(yellow)&#39;)) {println key + &#34;=1&#34;}
+        if (value.contains(&#39;(red)&#39;)) {println key + &#34;=2&#34;}
+        }
+    if (key == &#34;umbrellaLocalDNSConnectivity&#34; &#38;&#38; (value)) {
+        if (value.contains(&#39;(green)&#39;)) {println key + &#34;=0&#34;}
+        if (value.contains(&#39;(yellow)&#39;)) {println key + &#34;=1&#34;}
+        if (value.contains(&#39;(red)&#39;)) {println key + &#34;=2&#34;}
+    }
+    if (key == &#34;umbrellaDashboardConnectivity&#34; &#38;&#38; (value)) {
+        if (value.contains(&#39;(green)&#39;)) {println key + &#34;=0&#34;}
+        if (value.contains(&#39;(yellow)&#39;)) {println key + &#34;=1&#34;}
+        if (value.contains(&#39;(red)&#39;)) {println key + &#34;=2&#34;}
+    }
+    if (key == &#34;umbrellaADconnectivity&#34; &#38;&#38; (value)) {
+        if (value.contains(&#39;(green)&#39;)) {println key + &#34;=0&#34;}
+        if (value.contains(&#39;(yellow)&#39;)) {println key + &#34;=1&#34;}
+        if (value.contains(&#39;(red)&#39;)) {println key + &#34;=2&#34;}
+    }
+    if (key == &#34;umbrellaQueriesPS5min&#34; &#38;&#38; (value)){
+        println key + &#34;=&#34; + value
+    }
+    if (key == &#34;umbrellaQueriesPS15min&#34; &#38;&#38; (value)){
+        println key + &#34;=&#34; + value
+    }
+}
+return(0);</value>
+            <comment></comment>
+        </attribute>
+        <attribute>
+            <name>windowsscript</name>
+            <value></value>
+            <comment></comment>
+        </attribute>
+        <attribute>
+            <name>linuxscript</name>
+            <value></value>
+            <comment></comment>
+        </attribute>
+        <attribute>
+            <name>windowscmdline</name>
+            <value></value>
+            <comment></comment>
+        </attribute>
+        <attribute>
+            <name>linuxcmdline</name>
+            <value></value>
+            <comment></comment>
+        </attribute>
+        <attribute>
+            <name>properties</name>
+            <value></value>
+            <comment></comment>
+        </attribute>
+        <attribute>
+            <name>manualConnections</name>
+            <value></value>
+            <comment></comment>
+        </attribute>
+        </attributes>
+        <datapoints>
+        <datapoint>
+            <name>AD_Connectivity</name>
+            <originId>DshfTAtgRciT3oL7ljpV_Q</originId>
+            <dataType>7</dataType>
+            <type>2</type>
+            <postprocessormethod>namevalue</postprocessormethod>
+            <postprocessorparam>umbrellaADconnectivity</postprocessorparam>
+            <usevalue>output</usevalue>
+            <alertexpr>= 1 2</alertexpr>
+            <alertmissing>1</alertmissing>
+            <alertsubject></alertsubject>
+            <alertbody></alertbody>
+            <enableanomalyalertsuppression></enableanomalyalertsuppression>
+            <adadvsettingenabled>false</adadvsettingenabled>
+            <warnadadvsetting></warnadadvsetting>
+            <erroradadvsetting></erroradadvsetting>
+            <criticaladadvsetting></criticaladadvsetting>
+            <description>Connectivity to AD connectors
+0=Green
+1=Yellow
+2=Red</description>
+            <maxvalue>2</maxvalue>
+            <minvalue>0</minvalue>
+            <maxdigits>4</maxdigits>
+            <userparam1></userparam1>
+            <userparam2></userparam2>
+            <userparam3></userparam3>
+            <iscomposite>false</iscomposite>
+            <rpn></rpn>
+            <alertTransitionIval>0</alertTransitionIval>
+            <alertClearTransitionIval>0</alertClearTransitionIval>
+        </datapoint>
+        <datapoint>
+            <name>Dashboard_Connectivity</name>
+            <originId>SNlTyOkFR7KGUmVS98H6ow</originId>
+            <dataType>7</dataType>
+            <type>2</type>
+            <postprocessormethod>namevalue</postprocessormethod>
+            <postprocessorparam>umbrellaDashboardConnectivity</postprocessorparam>
+            <usevalue>output</usevalue>
+            <alertexpr>= 1 2</alertexpr>
+            <alertmissing>1</alertmissing>
+            <alertsubject></alertsubject>
+            <alertbody></alertbody>
+            <enableanomalyalertsuppression></enableanomalyalertsuppression>
+            <adadvsettingenabled>false</adadvsettingenabled>
+            <warnadadvsetting></warnadadvsetting>
+            <erroradadvsetting></erroradadvsetting>
+            <criticaladadvsetting></criticaladadvsetting>
+            <description>Connectivity to Umbrella dashboard
+0=Green
+1=Yellow
+2=Red</description>
+            <maxvalue>2</maxvalue>
+            <minvalue>0</minvalue>
+            <maxdigits>4</maxdigits>
+            <userparam1></userparam1>
+            <userparam2></userparam2>
+            <userparam3></userparam3>
+            <iscomposite>false</iscomposite>
+            <rpn></rpn>
+            <alertTransitionIval>0</alertTransitionIval>
+            <alertClearTransitionIval>0</alertClearTransitionIval>
+        </datapoint>
+        <datapoint>
+            <name>Local_DNS_Connectivity</name>
+            <originId>PLH8WfprSVGkCrho3CWsLw</originId>
+            <dataType>7</dataType>
+            <type>2</type>
+            <postprocessormethod>namevalue</postprocessormethod>
+            <postprocessorparam>umbrellaLocalDNSConnectivity</postprocessorparam>
+            <usevalue>output</usevalue>
+            <alertexpr>= 1 2</alertexpr>
+            <alertmissing>1</alertmissing>
+            <alertsubject></alertsubject>
+            <alertbody></alertbody>
+            <enableanomalyalertsuppression></enableanomalyalertsuppression>
+            <adadvsettingenabled>false</adadvsettingenabled>
+            <warnadadvsetting></warnadadvsetting>
+            <erroradadvsetting></erroradadvsetting>
+            <criticaladadvsetting></criticaladadvsetting>
+            <description>Connectivity to local DNS servers
+0=Green
+1=Yellow
+2=Red</description>
+            <maxvalue>2</maxvalue>
+            <minvalue>0</minvalue>
+            <maxdigits>4</maxdigits>
+            <userparam1></userparam1>
+            <userparam2></userparam2>
+            <userparam3></userparam3>
+            <iscomposite>false</iscomposite>
+            <rpn></rpn>
+            <alertTransitionIval>0</alertTransitionIval>
+            <alertClearTransitionIval>0</alertClearTransitionIval>
+        </datapoint>
+        <datapoint>
+            <name>Queries_PerSec_Last_5min</name>
+            <originId>tBYjiss6QpWXDtPiRFlYtA</originId>
+            <dataType>7</dataType>
+            <type>2</type>
+            <postprocessormethod>namevalue</postprocessormethod>
+            <postprocessorparam>umbrellaQueriesPS5min</postprocessorparam>
+            <usevalue>output</usevalue>
+            <alertexpr></alertexpr>
+            <alertmissing>1</alertmissing>
+            <alertsubject></alertsubject>
+            <alertbody></alertbody>
+            <enableanomalyalertsuppression></enableanomalyalertsuppression>
+            <adadvsettingenabled>false</adadvsettingenabled>
+            <warnadadvsetting></warnadadvsetting>
+            <erroradadvsetting></erroradadvsetting>
+            <criticaladadvsetting></criticaladadvsetting>
+            <description>Number of Queries Per Second for last 5 minutes</description>
+            <maxvalue></maxvalue>
+            <minvalue></minvalue>
+            <maxdigits>4</maxdigits>
+            <userparam1></userparam1>
+            <userparam2></userparam2>
+            <userparam3></userparam3>
+            <iscomposite>false</iscomposite>
+            <rpn></rpn>
+            <alertTransitionIval>0</alertTransitionIval>
+            <alertClearTransitionIval>0</alertClearTransitionIval>
+        </datapoint>
+        <datapoint>
+            <name>Umbrella_Connectivity</name>
+            <originId>Ow1c7NXNSzSRkt_zmq-3Hg</originId>
+            <dataType>7</dataType>
+            <type>2</type>
+            <postprocessormethod>namevalue</postprocessormethod>
+            <postprocessorparam>umbrellaConnectivity</postprocessorparam>
+            <usevalue>output</usevalue>
+            <alertexpr>= 1 2</alertexpr>
+            <alertmissing>1</alertmissing>
+            <alertsubject></alertsubject>
+            <alertbody></alertbody>
+            <enableanomalyalertsuppression></enableanomalyalertsuppression>
+            <adadvsettingenabled>false</adadvsettingenabled>
+            <warnadadvsetting></warnadadvsetting>
+            <erroradadvsetting></erroradadvsetting>
+            <criticaladadvsetting></criticaladadvsetting>
+            <description>Connectivity to Umbrella resolvers
+0=Green
+1=Yellow
+2=Red</description>
+            <maxvalue>2</maxvalue>
+            <minvalue>0</minvalue>
+            <maxdigits>4</maxdigits>
+            <userparam1></userparam1>
+            <userparam2></userparam2>
+            <userparam3></userparam3>
+            <iscomposite>false</iscomposite>
+            <rpn></rpn>
+            <alertTransitionIval>0</alertTransitionIval>
+            <alertClearTransitionIval>0</alertClearTransitionIval>
+        </datapoint>
+        <datapoint>
+            <name>VAStatus</name>
+            <originId>8ogIop3cQDaO6OspIkb5qw</originId>
+            <dataType>7</dataType>
+            <type>2</type>
+            <postprocessormethod>namevalue</postprocessormethod>
+            <postprocessorparam>umbrellaVAStatus</postprocessorparam>
+            <usevalue>output</usevalue>
+            <alertexpr>= 1 2</alertexpr>
+            <alertmissing>1</alertmissing>
+            <alertsubject></alertsubject>
+            <alertbody></alertbody>
+            <enableanomalyalertsuppression></enableanomalyalertsuppression>
+            <adadvsettingenabled>false</adadvsettingenabled>
+            <warnadadvsetting></warnadadvsetting>
+            <erroradadvsetting></erroradadvsetting>
+            <criticaladadvsetting></criticaladadvsetting>
+            <description>VA Status
+0=Green
+1=Yellow
+2=Red</description>
+            <maxvalue>2</maxvalue>
+            <minvalue>0</minvalue>
+            <maxdigits>4</maxdigits>
+            <userparam1></userparam1>
+            <userparam2></userparam2>
+            <userparam3></userparam3>
+            <iscomposite>false</iscomposite>
+            <rpn></rpn>
+            <alertTransitionIval>0</alertTransitionIval>
+            <alertClearTransitionIval>0</alertClearTransitionIval>
+        </datapoint>
+        <datapoint>
+            <name>Queries_PerSec_Last_15min</name>
+            <originId>qWQUTq5dQPqfKcyx2KGKVQ</originId>
+            <dataType>7</dataType>
+            <type>2</type>
+            <postprocessormethod>namevalue</postprocessormethod>
+            <postprocessorparam>umbrellaQueriesPS15min</postprocessorparam>
+            <usevalue>output</usevalue>
+            <alertexpr></alertexpr>
+            <alertmissing>1</alertmissing>
+            <alertsubject></alertsubject>
+            <alertbody></alertbody>
+            <enableanomalyalertsuppression></enableanomalyalertsuppression>
+            <adadvsettingenabled>false</adadvsettingenabled>
+            <warnadadvsetting></warnadadvsetting>
+            <erroradadvsetting></erroradadvsetting>
+            <criticaladadvsetting></criticaladadvsetting>
+            <description>Number of Queries Per Second for last 15 mnutes</description>
+            <maxvalue></maxvalue>
+            <minvalue></minvalue>
+            <maxdigits>4</maxdigits>
+            <userparam1></userparam1>
+            <userparam2></userparam2>
+            <userparam3></userparam3>
+            <iscomposite>false</iscomposite>
+            <rpn></rpn>
+            <alertTransitionIval>0</alertTransitionIval>
+            <alertClearTransitionIval>0</alertClearTransitionIval>
+        </datapoint>
+        </datapoints>
+        <graphs>
+        <graph>
+            <name>Queries per sec over 15 minutes</name>
+            <title>Queries per sec over 15 minutes</title>
+            <originId></originId>            <verticallabel>Queries per sec</verticallabel>
+            <rigid>false</rigid>
+            <maxvalue>NaN</maxvalue>
+            <minvalue>NaN</minvalue>
+            <displayprio>1</displayprio>
+            <timescale>1day</timescale>
+            <base1024>false</base1024>
+            <graphdatapoints>
+        <graphdatapoint>
+            <name>Queries_PerSec_Last_15min</name>
+            <datapointname>Queries_PerSec_Last_15min</datapointname>
+            <originId></originId>
+            <cf>1</cf>
+        </graphdatapoint>
+            </graphdatapoints>
+            <graphvirtualdatapoints>
+            </graphvirtualdatapoints>
+            <graphdatas>
+            <graphdata>
+                <type>1</type>
+                <legend>QPS</legend>
+                <color>silver</color>
+                <datapointname>Queries_PerSec_Last_15min</datapointname>
+                <isvirtualdatapoint>false</isvirtualdatapoint>
+            </graphdata>
+            </graphdatas>
+        </graph>
+        <graph>
+            <name>Queries per sec over 5 minutes</name>
+            <title>Queries per sec over 5 minutes</title>
+            <originId></originId>            <verticallabel>Queries per sec</verticallabel>
+            <rigid>false</rigid>
+            <maxvalue>NaN</maxvalue>
+            <minvalue>NaN</minvalue>
+            <displayprio>1</displayprio>
+            <timescale>1day</timescale>
+            <base1024>false</base1024>
+            <graphdatapoints>
+        <graphdatapoint>
+            <name>Queries_PerSec_Last_5min</name>
+            <datapointname>Queries_PerSec_Last_5min</datapointname>
+            <originId></originId>
+            <cf>1</cf>
+        </graphdatapoint>
+            </graphdatapoints>
+            <graphvirtualdatapoints>
+            </graphvirtualdatapoints>
+            <graphdatas>
+            <graphdata>
+                <type>1</type>
+                <legend>QPS</legend>
+                <color>silver</color>
+                <datapointname>Queries_PerSec_Last_5min</datapointname>
+                <isvirtualdatapoint>false</isvirtualdatapoint>
+            </graphdata>
+            </graphdatas>
+        </graph>
+        <graph>
+            <name>VA Status</name>
+            <title>VA Status</title>
+            <originId></originId>            <verticallabel>Status</verticallabel>
+            <rigid>false</rigid>
+            <maxvalue>2.0</maxvalue>
+            <minvalue>0.0</minvalue>
+            <displayprio>1</displayprio>
+            <timescale>1day</timescale>
+            <base1024>false</base1024>
+            <graphdatapoints>
+        <graphdatapoint>
+            <name>VAStatus</name>
+            <datapointname>VAStatus</datapointname>
+            <originId></originId>
+            <cf>1</cf>
+        </graphdatapoint>
+            </graphdatapoints>
+            <graphvirtualdatapoints>
+            </graphvirtualdatapoints>
+            <graphdatas>
+            <graphdata>
+                <type>1</type>
+                <legend>VAStatus</legend>
+                <color>silver</color>
+                <datapointname>VAStatus</datapointname>
+                <isvirtualdatapoint>false</isvirtualdatapoint>
+            </graphdata>
+            </graphdatas>
+        </graph>
+        </graphs>
+        <overviewgraphs>
+        </overviewgraphs>
+        <scripts>
+        </scripts>
+    </entry>
+</feed>

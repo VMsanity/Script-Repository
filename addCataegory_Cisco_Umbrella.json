@@ -1,0 +1,67 @@
+{
+    "scheduleOption": 0,
+    "metadata": {
+        "currentUuid": "FLRVRDeTR3a6MGabOlJJsw",
+        "originalUuid": "FLRVRDeTR3a6MGabOlJJsw",
+        "locatorId": "",
+        "authorCompanyUuid": "15feb5e4-a935-41c3-a66c-97cfb4568df2",
+        "registryVersion": "1.0.0",
+        "checksum": "9c15c32ac93b7291c80d28fcb3eb9964"
+    },
+    "dataType": 0,
+    "description": "Adds Cisco Umbrella category if VA is detected via SNMP",
+    "appliesTo": "(hasCategory(\"snmp\") && !isWindows())",
+    "technology": "",
+    "type": 5,
+    "params": [
+        {
+            "name": "linuxcmdline",
+            "comment": "",
+            "value": ""
+        },
+        {
+            "name": "linuxscript",
+            "comment": "",
+            "value": ""
+        },
+        {
+            "name": "scriptgroovy",
+            "comment": "",
+            "value": "import com.santaba.agent.groovyapi.snmp.Snmp;\n\n// Set environment variables.\ndef hostname = hostProps.get('system.hostname');\ndef snmp_timeout = 10000\n\n// Set SNMP OID.\ndef snmp_oid = '.1.3.6.1.2.1.1.1.0';\n\n// execute our SNMP GET and store the value.\noutput = Snmp.get(hostname, snmp_oid, null, snmp_timeout);\n\nif (output == \"Umbrella Virtual Appliance\") {\n\n    println \"system.categories=CiscoUmbrella\"\n}\n\n// Successful script execution, return 0;\nreturn 0;"
+        },
+        {
+            "name": "scripttype",
+            "comment": "embed",
+            "value": "embed"
+        },
+        {
+            "name": "windowscmdline",
+            "comment": "",
+            "value": ""
+        },
+        {
+            "name": "windowsscript",
+            "comment": "",
+            "value": ""
+        }
+    ],
+    "version": 1701717431,
+    "tags": "",
+    "auditVersion": 0,
+    "name": "addCataegory_Cisco_Umbrella",
+    "integrationMetadata": {
+        "publishedAtMS": 1701717462924,
+        "authorCompanyUuid": "15feb5e4-a935-41c3-a66c-97cfb4568df2",
+        "namespace": "topgolf",
+        "registryVersion": "1.0.0",
+        "name": "",
+        "checksum": "9c15c32ac93b7291c80d28fcb3eb9964",
+        "registryId": "a2ddca34-0d2c-47c1-8c1d-7de00de4111c",
+        "isPrivate": true,
+        "locator": "FLH9NH",
+        "lineageId": "FLRVRDeTR3a6MGabOlJJsw",
+        "status": "SECURITY_REVIEW"
+    },
+    "id": 262,
+    "group": "Cisco"
+}
